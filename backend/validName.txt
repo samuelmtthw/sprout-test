@@ -1,0 +1,99 @@
+// Made by Samuel Matthew using JavaScript
+// Please change the file extension to .js
+// https://github.com./samuelmtthw
+// samuelmatthew211@gmail.com
+
+function checkCapital(arr) {
+  for (const word of arr) {
+    if (word[0] !== word[0].toUpperCase()) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function checkLength(arr) {
+  if (arr.length < 2 || arr.length > 3) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+function checkDot(arr) {
+  for (const word of arr) {
+    if (word.length < 2) {
+      return false;
+    } else if (word.length > 2 && word[word.length - 1] === ".") {
+      return false;
+    } else {
+      return true;
+    }
+  }
+}
+
+function checkInitial(word) {
+  if (word.length === 2) {
+    if (word[0] === word[0].toUpperCase() && word[1] === ".") {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+
+function checkInitialPostition(arr) {
+  if (checkInitial(arr[arr.length - 1])) {
+    return false;
+  } else if (arr.length === 3) {
+    if (checkInitial(arr[0]) && !checkInitial(arr[1])) {
+      return false;
+    } else {
+      return true;
+    }
+  } else {
+    return true;
+  }
+}
+
+function validName(input) {
+  let fullName = input.split(" ");
+
+  if (!checkLength(fullName)) {
+    return false;
+  } else if (!checkCapital(fullName)) {
+    return false;
+  } else if (!checkDot(fullName)) {
+    return false;
+  } else if (!checkInitialPostition(fullName)) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+console.log("A. Kesya", validName("A. Kesya"));
+
+console.log("A. K. Putri", validName("A. K. Putri"));
+
+console.log("Angelina K. Putri", validName("Angelina K. Putri"));
+
+console.log("Angelina", validName("Angelina"));
+//  Must be 2 or 3 words
+
+console.log("a. Kesya", validName("a. Kesya"));
+//  Incorrect capitalization
+
+console.log("A Kesya", validName("A Kesya"));
+//  Missing dot after initial
+
+console.log("A. Kesya Putri", validName("A. Kesya Putri"));
+// Cannot have: initial first name + word middle name
+
+console.log("A. Kesya P.", validName("A. Kesya P."));
+// Last name cannot be initial
+
+console.log("Angelina. kesya Putri", validName("Angelina. Kesya Putri"));
+// Words cannot end with a dot (only initials can)
