@@ -1,0 +1,48 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Outfit", sans-serif;
+}
+
+.page {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.wrapper {
+  max-width: 1440px;
+  width: 100%;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 700;
+}
+
+.pokeCard {
+  width: 340px;
+  border-radius: 1em;
+}
+
+.pokeCard h3 {
+  color: white;
+}
+
+.pokeCard span {
+  background-color: rgba(255, 255, 255, 0.1);
+  width: fit-content;
+  border-radius: 1em;
+}
+
+.pokeCard img {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  height: 100%;
+}
