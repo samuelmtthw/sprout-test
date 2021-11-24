@@ -13,8 +13,8 @@ export default function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/pokemon/:id" element={<Details />} />
         <Route path="/" element={<HomePage />} />
+        <Route path="/pokemon/:name" element={<Details />} />
       </Routes>
     </div>
   );

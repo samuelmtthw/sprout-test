@@ -11,6 +11,7 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
+  height: 100vh;
 }
 
 .wrapper {
@@ -27,6 +28,8 @@ h3 {
 .pokeCard {
   width: 340px;
   border-radius: 1em;
+  height: 250px;
+  border: 1px solid rgba(0, 0, 0, 0);
 }
 
 .pokeCard h3 {
@@ -37,12 +40,74 @@ h3 {
   background-color: rgba(255, 255, 255, 0.1);
   width: fit-content;
   border-radius: 1em;
+  color: white;
+  margin-left: 0 !important;
 }
 
 .pokeCard img {
   position: absolute;
   bottom: 0;
   right: 0;
+  height: 80%;
+}
 
-  height: 100%;
+a {
+  text-decoration: none;
+  color: white;
+}
+a:hover {
+  color: white;
+}
+
+#HomePage a:hover {
+  opacity: 0.9;
+}
+
+#Details .wrapper {
+  background-color: rgb(239, 68, 68);
+}
+.detailsHead {
+  height: 40vh;
+  color: white;
+}
+.detailsBody {
+  height: 60vh;
+  background-color: white;
+  border-radius: 1em;
+}
+
+.detailsHead span {
+  background-color: rgba(255, 255, 255, 0.2);
+  width: fit-content;
+  border-radius: 1em;
+  color: white;
+  margin-left: 0 !important;
+}
+
+#Details img {
+  height: 300px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nav-link {
+  color: rgb(156, 163, 175);
+  font-weight: 700;
+  background-color: none;
+  padding-left: 0;
+  padding-right: 0;
+  margin-right: 20px;
+}
+
+.nav-pills .nav-link.active {
+  border-radius: 0;
+  background-color: white !important;
+  padding-bottom: 3px;
+  border-bottom: 3px solid black;
+}
+
+.nav-item .active {
+  background-color: none !important;
+  color: black !important;
 }
