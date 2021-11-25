@@ -95,6 +95,9 @@ a:hover {
   transform: translateX(-50%);
   z-index: 999;
 }
+#Details .btn {
+  width: fit-content;
+}
 
 .nav-link {
   color: rgb(156, 163, 175);

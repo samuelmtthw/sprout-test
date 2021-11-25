@@ -15,7 +15,7 @@ export default function HomePage() {
       method: "GET",
       url: "/pokemon",
       params: {
-        limit: "12",
+        limit: "20",
         // offset: page * 12,
       },
     })
@@ -32,8 +32,12 @@ export default function HomePage() {
 
   if (isLoading) {
     return (
-      <div id="HomePage">
-        <h1>isLoading</h1>
+      <div id="HomePage" className="page py-5">
+        <div className="wrapper">
+          <h1 className="text-center p-3 mb-5">Pokédex</h1>
+
+          <div className="cardContainer d-flex flex-row flex-wrap mx-3"></div>
+        </div>
       </div>
     );
   }

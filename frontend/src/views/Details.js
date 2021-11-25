@@ -121,11 +121,7 @@ export default function Details() {
   const statList = ["HP", "Attack", "Defense", "Sp. Atk", "Sp. Def", "Speed"];
 
   if (isLoading) {
-    return (
-      <div id="Details">
-        <h1>isLoading</h1>
-      </div>
-    );
+    return <div id="Details" className="page"></div>;
   }
 
   return (

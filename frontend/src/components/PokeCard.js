@@ -37,9 +37,12 @@ export default function PokeCard({ details }) {
 
   if (isLoading) {
     return (
-      <div>
-        <h1>hello</h1>
-      </div>
+      <a>
+        <div
+          className={`pokeCard card d-block p-3 m-1 shadow border-0`}
+          data-aos={"zoom-in"}
+        ></div>
+      </a>
     );
   }
 
