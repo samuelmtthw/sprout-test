@@ -30,29 +30,6 @@ export default function HomePage() {
       });
   }, []);
 
-  useEffect(() => {
-    const inputPokemon = pokemons;
-
-    for (const pokemon of inputPokemon) {
-      setIsLoading(true);
-      axios({
-        method: "GET",
-        url: `/pokemon/${pokemon.name}`,
-      })
-        .then(({ data }) => {
-          pokemon.imgUrl = data.sprites.front_default;
-          pokemon.types = data.types;
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }
-    setPokemons(inputPokemon);
-  }, [pokemons]);
-
   if (isLoading) {
     return (
       <div id="HomePage">
@@ -68,7 +45,7 @@ export default function HomePage() {
 
         <div className="cardContainer d-flex flex-row flex-wrap mx-3">
           {pokemons.map((el) => {
-            return <PokeCard details={el} key={el.name} />;
+            return <PokeCard details={el.name} key={el.name} />;
           })}
         </div>
       </div>
