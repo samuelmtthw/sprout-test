@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
 import axios from "../apis/server";
 
@@ -19,6 +19,11 @@ export default function Details() {
           name: data.name,
           types: data.types,
           imgUrl: data.sprites.front_default,
+          height: Number(data.height) * 10,
+          weight: Number(data.weight) / 10,
+          abilities: data.abilities,
+          stats: data.stats,
+          moves: data.moves,
         });
       })
       .catch((err) => {
@@ -27,7 +32,7 @@ export default function Details() {
       .finally(() => {
         setIsLoading(false);
       });
-  }, []);
+  }, [name]);
 
   function properCase(word) {
     if (word) {
@@ -38,6 +43,40 @@ export default function Details() {
       return result;
     }
   }
+
+  const abilities = useMemo(() => {
+    let skills;
+    if (details.abilities?.length > 1) {
+      skills = details.abilities.map((el) => {
+        let splitted = el.ability.name.split("-");
+        splitted = splitted.map((el) => {
+          return properCase(el);
+        });
+        return splitted.join(" ");
+      });
+    } else {
+      skills = properCase(details.abilities?.ability.name);
+    }
+
+    if (skills?.length > 1) {
+      skills = skills.join(", ");
+    }
+    return skills;
+  }, [details.abilities]);
+
+  const statList = ["HP", "Attack", "Defense", "Sp. Atk", "Sp. Def", "Speed"];
+
+  const moves = useMemo(() => {
+    const result = details.moves?.map((el) => {
+      let splitted = el.move.name.split("-");
+      splitted = splitted.map((el) => {
+        return properCase(el);
+      });
+      return splitted.join(" ");
+    });
+
+    return result;
+  }, []);
 
   if (isLoading) {
     return (
@@ -65,10 +104,20 @@ export default function Details() {
             })}
           </div>
           <div className="picture">
-            <img src={details.imgUrl} alt="sprites" />
+            <img
+              src={details.imgUrl}
+              alt="sprites"
+              data-aos="fade-up"
+              data-aos-duration="600"
+              data-aos-delay="400"
+            />
           </div>
         </div>
-        <div className="detailsBody p-4">
+        <div
+          className="detailsBody p-4"
+          data-aos="fade-up"
+          data-aos-duration="600"
+        >
           <ul className="nav nav-pills my-3 " id="pills-tab" role="tablist">
             <li className="nav-item" role="presentation">
               <button
@@ -127,14 +176,41 @@ export default function Details() {
               </button>
             </li>
           </ul>
-          <div className="tab-content" id="pills-tabContent">
+          <div className="tab-content mt-4" id="pills-tabContent">
             <div
               className="tab-pane fade show active"
               id="pills-about"
               role="tabpanel"
               aria-labelledby="pills-about-tab"
             >
-              about
+              <div className="row mb-3">
+                <div className="col-3 col-sm-2 col-md-1">
+                  <strong>Species</strong>
+                </div>
+                <div className="col-9 col-sm-10 col-md-11">hello</div>
+              </div>
+              <div className="row mb-3">
+                <div className="col-3 col-sm-2 col-md-1">
+                  <strong>Height</strong>
+                </div>
+                <div className="col-9 col-sm-10 col-md-11">
+                  {details.height} cm
+                </div>
+              </div>
+              <div className="row mb-3">
+                <div className="col-3 col-sm-2 col-md-1">
+                  <strong>Weight</strong>
+                </div>
+                <div className="col-9 col-sm-10 col-md-11">
+                  {details.weight} kg
+                </div>
+              </div>
+              <div className="row mb-3">
+                <div className="col-3 col-sm-2 col-md-1">
+                  <strong>Abilities</strong>
+                </div>
+                <div className="col-9 col-sm-10 col-md-11">{abilities}</div>
+              </div>
             </div>
             <div
               className="tab-pane fade"
@@ -142,7 +218,35 @@ export default function Details() {
               role="tabpanel"
               aria-labelledby="pills-stats-tab"
             >
-              stats
+              {details.stats?.map((el, idx) => {
+                return (
+                  <div className="row mb-3" key={el.stat.name}>
+                    <div className="col-3 col-sm-2 col-md-1">
+                      <strong>{properCase(statList[idx])}</strong>
+                    </div>
+                    <div className="col-9 col-sm-10 col-md-11 d-flex flex-row align-items-center">
+                      <div className="d-inline-block me-4">{el.base_stat}</div>
+
+                      <div className="progress w-75">
+                        <div
+                          className="progress-bar"
+                          role="progressbar"
+                          aria-valuenow={el.base_stat}
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                          style={{
+                            width: `${el.base_stat}%`,
+                            backgroundColor:
+                              el.base_stat >= 60
+                                ? "rgb(123, 196, 152)"
+                                : "rgb(239, 68, 68)",
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
             <div
               className="tab-pane fade"
@@ -158,7 +262,13 @@ export default function Details() {
               role="tabpanel"
               aria-labelledby="pills-moves-tab"
             >
-              moves
+              {moves?.map((el) => {
+                return (
+                  <strong className="p-2 tag me-1 mb-1" key={el}>
+                    {el}
+                  </strong>
+                );
+              })}
             </div>
           </div>
         </div>

@@ -46,20 +46,10 @@ export default function PokeCard({ details }) {
   return (
     <Link to={`/pokemon/${pokemon.name}`}>
       <div
-        className={`pokeCard card d-block p-3 m-1 shadow border-0 bg-secondary`}
+        className={`pokeCard card d-block p-3 m-1 shadow border-0`}
         data-aos={"fade-up"}
       >
         <h3>{properCase(details)}</h3>
-
-        {/* {details.types?.map((el) => {
-          return (
-            <span className="py-1 px-3 mx-1" key={el.type.name}>
-              {properCase(el.type.name)}
-            </span>
-          );
-        })} */}
-
-        {/* <img src={details.imgUrl} alt="sprites" /> */}
 
         {pokemon.types?.map((el) => {
           return (
@@ -69,12 +59,8 @@ export default function PokeCard({ details }) {
           );
         })}
 
-        {/* <span className="py-1 px-3 mx-1">Grass</span>
-        <span className="py-1 px-3 mx-1">Poison</span> */}
         <img src={pokemon.imgUrl} alt="sprites" />
       </div>
     </Link>
   );
-
-  // return <h1>{details}</h1>;
 }
