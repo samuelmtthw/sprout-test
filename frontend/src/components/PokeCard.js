@@ -47,7 +47,7 @@ export default function PokeCard({ details }) {
     <Link to={`/pokemon/${pokemon.name}`}>
       <div
         className={`pokeCard card d-block p-3 m-1 shadow border-0`}
-        data-aos={"fade-up"}
+        data-aos={"zoom-in"}
       >
         <h3>{properCase(details)}</h3>
 

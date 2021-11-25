@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 import axios from "../apis/server";
 
 export default function Details() {
@@ -14,17 +15,90 @@ export default function Details() {
       url: `/pokemon/${name}`,
     })
       .then(({ data }) => {
-        setDetails({
+        const moves = data.moves?.map((el) => {
+          let splitted = el.move.name.split("-");
+          splitted = splitted.map((el) => {
+            return properCase(el);
+          });
+          return splitted.join(" ");
+        });
+
+        let abilities = data.abilities?.map((el) => {
+          let splitted = el.ability.name.split("-");
+          splitted = splitted.map((el) => {
+            return properCase(el);
+          });
+          return splitted.join(" ");
+        });
+
+        if (abilities.length > 1) {
+          abilities = abilities.join(", ");
+        }
+        const payload = {
           id: data.id,
           name: data.name,
           types: data.types,
           imgUrl: data.sprites.front_default,
           height: Number(data.height) * 10,
           weight: Number(data.weight) / 10,
-          abilities: data.abilities,
+          abilities,
           stats: data.stats,
-          moves: data.moves,
-        });
+          moves,
+        };
+
+        return payload;
+      })
+      .then((payload) => {
+        setIsLoading(true);
+        axios({
+          method: "GET",
+          url: `/pokemon-species/${name}`,
+        })
+          .then(({ data }) => {
+            payload.species = data.genera[7].genus;
+            payload.evoChain = data.evolution_chain.url.split("/");
+            payload.evoChain = payload.evoChain[payload.evoChain.length - 2];
+            return payload;
+          })
+          .then((payload) => {
+            setIsLoading(true);
+
+            axios({
+              method: "GET",
+              url: `/evolution-chain/${payload.evoChain}`,
+            })
+              .then(({ data }) => {
+                let evoChain = [];
+                function getEvo(arr) {
+                  if (arr[0].evolves_to.length > 0) {
+                    evoChain.push(arr[0].species.name);
+                    getEvo(arr[0].evolves_to);
+                  } else {
+                    evoChain.push(arr[0].species.name);
+                    return 0;
+                  }
+                }
+                getEvo([data.chain]);
+                evoChain = evoChain.map((el) => {
+                  return properCase(el);
+                });
+                payload.evolutions = evoChain.join(", ");
+
+                setDetails(payload);
+              })
+              .catch((err) => {
+                console.log(err.response.data);
+              })
+              .finally(() => {
+                setIsLoading(false);
+              });
+          })
+          .catch((err) => {
+            console.log(err.response.data);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -44,39 +118,7 @@ export default function Details() {
     }
   }
 
-  const abilities = useMemo(() => {
-    let skills;
-    if (details.abilities?.length > 1) {
-      skills = details.abilities.map((el) => {
-        let splitted = el.ability.name.split("-");
-        splitted = splitted.map((el) => {
-          return properCase(el);
-        });
-        return splitted.join(" ");
-      });
-    } else {
-      skills = properCase(details.abilities?.ability.name);
-    }
-
-    if (skills?.length > 1) {
-      skills = skills.join(", ");
-    }
-    return skills;
-  }, [details.abilities]);
-
   const statList = ["HP", "Attack", "Defense", "Sp. Atk", "Sp. Def", "Speed"];
-
-  const moves = useMemo(() => {
-    const result = details.moves?.map((el) => {
-      let splitted = el.move.name.split("-");
-      splitted = splitted.map((el) => {
-        return properCase(el);
-      });
-      return splitted.join(" ");
-    });
-
-    return result;
-  }, []);
 
   if (isLoading) {
     return (
@@ -147,20 +189,7 @@ export default function Details() {
                 Base Stats
               </button>
             </li>
-            <li className="nav-item" role="presentation">
-              <button
-                className="nav-link"
-                id="pills-evo-tab"
-                data-bs-toggle="pill"
-                data-bs-target="#pills-evo"
-                type="button"
-                role="tab"
-                aria-controls="pills-evo"
-                aria-selected="false"
-              >
-                Evolution
-              </button>
-            </li>
+
             <li className="nav-item" role="presentation">
               <button
                 className="nav-link"
@@ -187,7 +216,9 @@ export default function Details() {
                 <div className="col-3 col-sm-2 col-md-1">
                   <strong>Species</strong>
                 </div>
-                <div className="col-9 col-sm-10 col-md-11">hello</div>
+                <div className="col-9 col-sm-10 col-md-11">
+                  {details.species}
+                </div>
               </div>
               <div className="row mb-3">
                 <div className="col-3 col-sm-2 col-md-1">
@@ -209,7 +240,17 @@ export default function Details() {
                 <div className="col-3 col-sm-2 col-md-1">
                   <strong>Abilities</strong>
                 </div>
-                <div className="col-9 col-sm-10 col-md-11">{abilities}</div>
+                <div className="col-9 col-sm-10 col-md-11">
+                  {details.abilities}
+                </div>
+              </div>
+              <div className="row mb-3">
+                <div className="col-3 col-sm-2 col-md-1">
+                  <strong>Evolutions</strong>
+                </div>
+                <div className="col-9 col-sm-10 col-md-11">
+                  {details.evolutions}
+                </div>
               </div>
             </div>
             <div
@@ -250,19 +291,11 @@ export default function Details() {
             </div>
             <div
               className="tab-pane fade"
-              id="pills-evo"
-              role="tabpanel"
-              aria-labelledby="pills-evo-tab"
-            >
-              evo
-            </div>
-            <div
-              className="tab-pane fade"
               id="pills-moves"
               role="tabpanel"
               aria-labelledby="pills-moves-tab"
             >
-              {moves?.map((el) => {
+              {details.moves?.map((el) => {
                 return (
                   <strong className="p-2 tag me-1 mb-1" key={el}>
                     {el}
@@ -271,6 +304,9 @@ export default function Details() {
               })}
             </div>
           </div>
+          <Link to="/" className="btn btn-secondary mt-4">
+            Back
+          </Link>
         </div>
       </div>
     </div>

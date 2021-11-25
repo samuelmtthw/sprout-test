@@ -41,7 +41,7 @@ export default function HomePage() {
   return (
     <div id="HomePage" className="page py-5">
       <div className="wrapper">
-        <h1 className="text-center p-3 mb-5">Pokedex</h1>
+        <h1 className="text-center p-3 mb-5">Pokédex</h1>
 
         <div className="cardContainer d-flex flex-row flex-wrap mx-3">
           {pokemons.map((el) => {

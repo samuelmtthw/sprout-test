@@ -75,7 +75,7 @@ a:hover {
   color: white;
 }
 .detailsBody {
-  height: 60vh;
+  min-height: 60vh;
   background-color: white;
   border-radius: 1em 1em 0 0;
 }
